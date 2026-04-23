@@ -7,7 +7,11 @@ const nextConfig: NextConfig = {
         return [
             {
                 source: "/rtc/:path*",
-                destination: `http://${process.env.RTC_SERVER_HOST || "localhost"}/rtc/:path*`,
+                destination: `https://${process.env.RTC_SERVER_HOST || "localhost"}/rtc/:path*/`,
+            },
+            {
+                source: "/rtc/:path*/",
+                destination: `https://${process.env.RTC_SERVER_HOST || "localhost"}/rtc/:path*/`,
             },
         ];
     },
