@@ -25,8 +25,8 @@ export function StreamPlayer({ slug }: { slug: string }) {
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);
 
-                const srsApiUrl = `https://${process.env.SRS_API_HOST}/rtc/v1/play/`;
-                const streamUrl = `webrtc://${process.env.RTC_SERVER_IP}/live/${slug}`;
+                const srsApiUrl = `https://${process.env.NEXT_PUBLIC_SRS_API_HOST}/rtc/v1/play/`;
+                const streamUrl = `webrtc://${process.env.NEXT_PUBLIC_RTC_SERVER_IP}/live/${slug}`;
 
                 // 2. Exchange SDP with SRS
                 const response = await fetch(srsApiUrl, {
