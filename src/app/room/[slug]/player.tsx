@@ -25,18 +25,14 @@ export function StreamPlayer({ slug }: { slug: string }) {
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);
 
-                const srsApiUrl = `https://${process.env.NEXT_PUBLIC_SRS_API_HOST}/rtc/v1/play/`;
+                const serverExchangeUrl = `/api/srs/exchange`;
                 const streamUrl = `webrtc://${process.env.NEXT_PUBLIC_RTC_SERVER_IP}/live/${slug}`;
 
-                // 2. Exchange SDP with SRS
-                const response = await fetch(srsApiUrl, {
+                // 2. Exchange SDP with SRS via server-side proxy (uses SRS_API_USERNAME/SRS_API_PASSWORD)
+                const response = await fetch(serverExchangeUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        api: srsApiUrl,
-                        streamurl: streamUrl,
-                        sdp: offer.sdp,
-                    }),
+                    body: JSON.stringify({ streamurl: streamUrl, sdp: offer.sdp }),
                 });
 
                 const data = await response.json();
@@ -47,7 +43,7 @@ export function StreamPlayer({ slug }: { slug: string }) {
 
                 // 3. Set remote description from SRS answer
                 await pc.setRemoteDescription(new RTCSessionDescription({ type: "answer", sdp: data.sdp }));
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error("WebRTC Error:", err);
                 setError("Stream is offline or failed to load");
             }

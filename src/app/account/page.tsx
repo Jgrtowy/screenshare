@@ -4,7 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import db from "~/db/db";
-import { roomsSchema, streamKeysSchema } from "~/db/schema";
+import { roomsSchema, streamKeysSchema, user } from "~/db/schema";
 import { auth } from "~/lib/auth";
 import { CopyButton } from "./copy-button";
 import { CreateRoomButton } from "./create-room-button";
@@ -16,6 +16,16 @@ export default async function Account() {
 
     if (!session?.user) {
         redirect("/login");
+    }
+
+    if (
+        await db
+            .select({ allowed: user.adminPanelAllowed })
+            .from(user)
+            .where(eq(user.id, session.user.id))
+            .then((res) => !res[0]?.allowed)
+    ) {
+        redirect("/");
     }
 
     const streamKeys = await db.select().from(streamKeysSchema).where(eq(streamKeysSchema.userId, session.user.id)).limit(1);
@@ -52,7 +62,7 @@ export default async function Account() {
                             <div key={room.id} className="flex flex-col sm:flex-row sm:items-center justify-between bg-zinc-950 p-4 rounded-md border border-zinc-800 gap-4">
                                 <div className="flex flex-col flex-1 min-w-0">
                                     <span className="font-semibold text-lg truncate">{room.name || "Unnamed Room"}</span>
-                                    <span className="text-xs text-zinc-500 font-mono truncate max-w-[200px] sm:max-w-xs md:max-w-md lg:max-w-none">ID: {room.slug.substring(0, 16)}...</span>
+                                    <span className="text-xs text-zinc-500 font-mono truncate max-w-50 sm:max-w-xs md:max-w-md lg:max-w-none">ID: {room.slug.substring(0, 16)}...</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <Link href={`/room/${room.slug}`}>

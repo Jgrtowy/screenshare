@@ -22,5 +22,8 @@
                 "noArrayIndexKey": "off"
             }
         }
+    },
+    "files": {
+        "includes": ["**", "!**/node_modules", "!**/public", "!**/.wrangler", "!**/dist", "!**/icons", "!**/patches", "!**/*.css", "!**/*.scss", "!**/.next"]
     }
 }

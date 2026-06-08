@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
         const roomSlug = body.stream;
         const paramStr = body.param || "";
-        
+
         // Parse the stream key from the params (e.g., ?key=your_stream_key)
         const params = new URLSearchParams(paramStr);
         const streamKey = params.get("key") || params.get("k");
@@ -25,11 +25,7 @@ export async function POST(req: Request) {
         }
 
         // 1. Validate the stream key
-        const keys = await db
-            .select()
-            .from(streamKeysSchema)
-            .where(eq(streamKeysSchema.key, streamKey))
-            .limit(1);
+        const keys = await db.select().from(streamKeysSchema).where(eq(streamKeysSchema.key, streamKey)).limit(1);
 
         const validKey = keys[0];
 
@@ -55,7 +51,6 @@ export async function POST(req: Request) {
 
         // 0 code allows the stream to publish on SRS
         return NextResponse.json({ code: 0 });
-
     } catch (error) {
         console.error("SRS Webhook Error:", error);
         // Returning a non-zero code rejects the stream
