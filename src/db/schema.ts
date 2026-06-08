@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, index, integer, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, index, integer, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
@@ -100,6 +100,26 @@ export const roomsSchema = pgTable("rooms", {
     userId: text("user_id").notNull(),
 });
 
+export const jellyfinSettingsSchema = pgTable(
+    "jellyfin_settings",
+    {
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        userId: text("user_id")
+            .notNull()
+            .references(() => user.id, { onDelete: "cascade" }),
+        enabled: boolean("enabled").default(false).notNull(),
+        url: text("url"),
+        apiKey: text("api_key"),
+        username: text("username"),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+        updatedAt: timestamp("updated_at")
+            .defaultNow()
+            .$onUpdate(() => /* @__PURE__ */ new Date())
+            .notNull(),
+    },
+    (table) => [unique("jellyfin_settings_user_id_unique").on(table.userId)],
+);
+
 export const roomViewersSchema = pgTable(
     "room_viewers",
     {
@@ -116,7 +136,7 @@ export const roomViewersSchema = pgTable(
             .$onUpdate(() => /* @__PURE__ */ new Date())
             .notNull(),
     },
-    (table) => [uniqueIndex("room_viewers_room_slug_viewer_key_unique").on(table.roomSlug, table.viewerKey), index("room_viewers_room_slug_last_seen_idx").on(table.roomSlug, table.lastSeenAt)],
+    (table) => [unique("room_viewers_room_slug_viewer_key_unique").on(table.roomSlug, table.viewerKey), index("room_viewers_room_slug_last_seen_idx").on(table.roomSlug, table.lastSeenAt)],
 );
 
 export const streamKeysSchema = pgTable("stream_keys", {
@@ -135,6 +155,13 @@ export const streamKeysRelations = relations(streamKeysSchema, ({ one }) => ({
 export const roomsRelations = relations(roomsSchema, ({ one }) => ({
     user: one(user, {
         fields: [roomsSchema.userId],
+        references: [user.id],
+    }),
+}));
+
+export const jellyfinSettingsRelations = relations(jellyfinSettingsSchema, ({ one }) => ({
+    user: one(user, {
+        fields: [jellyfinSettingsSchema.userId],
         references: [user.id],
     }),
 }));

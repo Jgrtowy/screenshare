@@ -6,6 +6,7 @@ import { roomsSchema, user } from "~/db/schema";
 import { auth } from "~/lib/auth";
 import { CurrentViewersBox } from "./current-viewers";
 import { RoomHostDisplay } from "./host-display";
+import { JellyfinWidget } from "./jellyfin-widget";
 import { StreamPlayer } from "./player";
 import { RoomAuthControls } from "./room-auth-controls";
 
@@ -58,6 +59,10 @@ export default async function RoomPage({ params }: RoomPageProps) {
 
             <div className="mt-6">
                 <CurrentViewersBox roomSlug={currentRoom.slug} sessionUser={session?.user ?? null} />
+            </div>
+
+            <div className="mt-6">
+                <JellyfinWidget roomSlug={currentRoom.slug} />
             </div>
         </div>
     );

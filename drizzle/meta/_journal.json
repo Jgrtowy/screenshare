@@ -22,6 +22,20 @@
             "when": 1780842337968,
             "tag": "0002_current_viewers",
             "breakpoints": true
+        },
+        {
+            "idx": 3,
+            "version": "7",
+            "when": 1780842337969,
+            "tag": "0003_jellyfin_settings",
+            "breakpoints": true
+        },
+        {
+            "idx": 4,
+            "version": "7",
+            "when": 1780842337970,
+            "tag": "0004_jellyfin_username",
+            "breakpoints": true
         }
     ]
 }
