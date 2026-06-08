@@ -1,11 +1,18 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import React from "react";
 import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth-client";
 
 export default function Auth() {
     const [isLoading, setIsLoading] = React.useState(false);
+
+    const session = authClient.useSession();
+
+    if (session?.data?.user.id) {
+        redirect("/");
+    }
 
     const signIn = async () => {
         setIsLoading(true);

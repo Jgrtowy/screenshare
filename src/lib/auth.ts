@@ -21,7 +21,7 @@ export const auth = betterAuth({
         discord: {
             clientId: process.env.DISCORD_CLIENT_ID || "",
             clientSecret: process.env.DISCORD_CLIENT_SECRET || "",
-            scope: ["identify", "email", "guilds", "rpc"],
+            scope: ["identify", "email", "guilds"],
             redirectURI: `${process.env.BETTER_AUTH_URL || "http://localhost:3000"}/api/auth/callback/discord`,
         },
     },

@@ -18,10 +18,15 @@ export function RoomAuthControls({ sessionUser }: { sessionUser: RoomSessionUser
         router.refresh();
     };
 
+    const handleSignIn = async () => {
+        await authClient.signIn.social({ provider: "discord", callbackURL: `${window.location.origin}/room/${window.location.pathname.split("/").slice(-1)[0]}` });
+        router.refresh();
+    };
+
     if (!sessionUser) {
         return (
-            <Button size="sm" variant="outline">
-                <Link href="/login">Sign in</Link>
+            <Button size="sm" variant="outline" onClick={handleSignIn}>
+                Sign in with Discord
             </Button>
         );
     }
