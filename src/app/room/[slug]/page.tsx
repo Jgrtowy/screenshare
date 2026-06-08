@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import db from "~/db/db";
 import { roomsSchema, user } from "~/db/schema";
 import { auth } from "~/lib/auth";
+import { CurrentViewersBox } from "./current-viewers";
 import { RoomHostDisplay } from "./host-display";
 import { StreamPlayer } from "./player";
 import { RoomAuthControls } from "./room-auth-controls";
@@ -55,13 +56,8 @@ export default async function RoomPage({ params }: RoomPageProps) {
                 <StreamPlayer slug={currentRoom.slug} />
             </div>
 
-            <div className="mt-6 p-4 bg-zinc-900 border border-zinc-800 rounded-lg">
-                <h2 className="text-lg font-medium mb-2">Room Info</h2>
-                <p className="text-sm text-zinc-400">
-                    You are watching <RoomHostDisplay slug={currentRoom.slug} initialHostName={currentRoom.hostName} className="text-zinc-300 font-medium" />
-                    's stream.
-                </p>
-                {/* Future guest/chat features can be placed here */}
+            <div className="mt-6">
+                <CurrentViewersBox roomSlug={currentRoom.slug} sessionUser={session?.user ?? null} />
             </div>
         </div>
     );

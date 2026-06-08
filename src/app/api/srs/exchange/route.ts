@@ -11,7 +11,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing SRS API host" }, { status: 500 });
         }
 
-        const srsApiUrl = `https://${SRS_API_HOST}/rtc/v1/play/`;
+        const srsApiUrl = `${SRS_API_HOST}/rtc/v1/play/`;
 
         const headers: Record<string, string> = { "Content-Type": "application/json" };
 

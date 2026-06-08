@@ -1,10 +1,41 @@
 "use client";
 
+import "plyr-react/plyr.css";
 import { useEffect, useRef, useState } from "react";
 
+type PlyrInstance = {
+    destroy: () => void;
+};
+
 export function StreamPlayer({ slug }: { slug: string }) {
-    const videoRef = useRef<HTMLVideoElement>(null);
     const [error, setError] = useState<string | null>(null);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+    const playerRef = useRef<PlyrInstance | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!videoRef.current) return;
+
+        let active = true;
+
+        const setupPlayer = async () => {
+            const { default: Plyr } = await import("plyr");
+
+            if (!active || !videoRef.current) return;
+
+            playerRef.current = new Plyr(videoRef.current, {
+                controls: ["play", "mute", "volume", "fullscreen"],
+            });
+        };
+
+        void setupPlayer();
+
+        return () => {
+            active = false;
+            playerRef.current?.destroy();
+            playerRef.current = null;
+        };
+    }, []);
 
     useEffect(() => {
         const pc = new RTCPeerConnection();
@@ -50,6 +81,7 @@ export function StreamPlayer({ slug }: { slug: string }) {
         };
 
         startPlay();
+        setLoading(false);
 
         return () => {
             pc.close();
@@ -62,6 +94,7 @@ export function StreamPlayer({ slug }: { slug: string }) {
     return (
         <div className="relative w-full h-full bg-black">
             {error && <div className="absolute inset-0 flex items-center justify-center text-zinc-400 z-10 bg-black/50">{error}</div>}
+            {loading && <div className="absolute inset-0 flex items-center justify-center text-zinc-400 z-10 bg-black/50">Loading...</div>}
             <video ref={videoRef} autoPlay controls muted playsInline className="w-full h-full object-contain" />
         </div>
     );

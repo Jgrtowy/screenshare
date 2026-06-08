@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, index, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, index, integer, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
     id: text("id").primaryKey(),
@@ -99,6 +99,25 @@ export const roomsSchema = pgTable("rooms", {
     name: text("name"),
     userId: text("user_id").notNull(),
 });
+
+export const roomViewersSchema = pgTable(
+    "room_viewers",
+    {
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        roomSlug: text("room_slug").notNull(),
+        viewerKey: text("viewer_key").notNull(),
+        name: text("name").notNull(),
+        image: text("image"),
+        isAuthenticated: boolean("is_authenticated").default(false).notNull(),
+        lastSeenAt: timestamp("last_seen_at").notNull(),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+        updatedAt: timestamp("updated_at")
+            .defaultNow()
+            .$onUpdate(() => /* @__PURE__ */ new Date())
+            .notNull(),
+    },
+    (table) => [uniqueIndex("room_viewers_room_slug_viewer_key_unique").on(table.roomSlug, table.viewerKey), index("room_viewers_room_slug_last_seen_idx").on(table.roomSlug, table.lastSeenAt)],
+);
 
 export const streamKeysSchema = pgTable("stream_keys", {
     id: integer("id").primaryKey().generatedAlwaysAsIdentity(),

@@ -15,6 +15,13 @@
             "when": 1780842337967,
             "tag": "0002_lean_viper",
             "breakpoints": true
+        },
+        {
+            "idx": 2,
+            "version": "7",
+            "when": 1780842337968,
+            "tag": "0002_current_viewers",
+            "breakpoints": true
         }
     ]
 }

@@ -15,6 +15,18 @@ const nextConfig: NextConfig = {
             },
         ];
     },
+    images: {
+        localPatterns: [
+            {
+                pathname: "/api/avatar**",
+            },
+        ],
+        remotePatterns: [
+            {
+                hostname: "cdn.discordapp.com",
+            },
+        ],
+    },
     output: "standalone",
     allowedDevOrigins: ["a455-88-156-120-71.ngrok-free.app"],
 };
