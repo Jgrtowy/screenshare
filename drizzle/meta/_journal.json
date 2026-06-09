@@ -36,6 +36,13 @@
             "when": 1780842337970,
             "tag": "0004_jellyfin_username",
             "breakpoints": true
+        },
+        {
+            "idx": 5,
+            "version": "7",
+            "when": 1780842337971,
+            "tag": "0005_discord_server_id",
+            "breakpoints": true
         }
     ]
 }

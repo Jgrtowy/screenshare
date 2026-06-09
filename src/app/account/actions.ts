@@ -4,7 +4,6 @@ import crypto from "node:crypto";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import db from "~/db/db";
 import { jellyfinSettingsSchema, roomsSchema, user } from "~/db/schema";
 import { auth } from "~/lib/auth";
@@ -106,5 +105,46 @@ export async function updateJellyfinSettingsAction(input: JellyfinSettingsInput)
         });
 
     revalidatePath("/account");
+    return { success: true };
+}
+
+export async function updateRoomDiscordServerAction(input: { roomId: number; discordServerId: string }) {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    if (!session?.user) {
+        throw new Error("Unauthorized");
+    }
+
+    const currentUser = await db.select({ adminPanelAllowed: user.adminPanelAllowed }).from(user).where(eq(user.id, session.user.id)).limit(1);
+
+    if (!currentUser[0]?.adminPanelAllowed) {
+        throw new Error("Admin access required");
+    }
+
+    const room = await db.select({ slug: roomsSchema.slug, userId: roomsSchema.userId }).from(roomsSchema).where(eq(roomsSchema.id, input.roomId)).limit(1);
+
+    if (!room[0] || room[0].userId !== session.user.id) {
+        throw new Error("Room not found");
+    }
+
+    const discordServerId = input.discordServerId.trim();
+
+    if (discordServerId && !/^\d+$/.test(discordServerId)) {
+        throw new Error("Enter a valid Discord server ID");
+    }
+
+    await db
+        .update(roomsSchema)
+        .set({
+            discordServerId: discordServerId || null,
+        })
+        .where(eq(roomsSchema.id, input.roomId));
+
+    revalidatePath("/account");
+    revalidatePath("/rooms");
+    revalidatePath(`/room/${room[0].slug}`);
+
     return { success: true };
 }

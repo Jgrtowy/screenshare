@@ -16,7 +16,7 @@ export function StreamPlayer({ slug }: { slug: string }) {
     const hideControlsTimerRef = useRef<number | null>(null);
 
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isMuted, setIsMuted] = useState(true);
+    const [isMuted, setIsMuted] = useState(false);
     const [volume, setVolume] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);

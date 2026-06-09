@@ -9,6 +9,7 @@ import { auth } from "~/lib/auth";
 import { CopyButton } from "./copy-button";
 import { CreateRoomButton } from "./create-room-button";
 import { JellyfinSettingsForm } from "./jellyfin-settings-form";
+import { RoomDiscordServerButton } from "./room-discord-server-button";
 
 export default async function Account() {
     const session = await auth.api.getSession({
@@ -19,14 +20,16 @@ export default async function Account() {
         redirect("/login");
     }
 
-    const streamKeys = await db.select().from(streamKeysSchema).where(eq(streamKeysSchema.userId, session.user.id)).limit(1);
+    const [streamKeys, userRooms, currentUser, jellyfinSettings] = await Promise.all([
+        db.select().from(streamKeysSchema).where(eq(streamKeysSchema.userId, session.user.id)).limit(1),
+        db.select().from(roomsSchema).where(eq(roomsSchema.userId, session.user.id)),
+        db.select({ adminPanelAllowed: user.adminPanelAllowed }).from(user).where(eq(user.id, session.user.id)).limit(1),
+        db.select().from(jellyfinSettingsSchema).where(eq(jellyfinSettingsSchema.userId, session.user.id)).limit(1),
+    ]);
 
     const streamKey = streamKeys[0]?.key;
-
-    const userRooms = await db.select().from(roomsSchema).where(eq(roomsSchema.userId, session.user.id));
-    const currentUser = await db.select({ adminPanelAllowed: user.adminPanelAllowed }).from(user).where(eq(user.id, session.user.id)).limit(1);
-    const jellyfinSettings = await db.select().from(jellyfinSettingsSchema).where(eq(jellyfinSettingsSchema.userId, session.user.id)).limit(1);
     const jellyfinSetting = jellyfinSettings[0];
+    const canManageAdminTools = Boolean(currentUser[0]?.adminPanelAllowed);
 
     return (
         <div className="container mx-auto max-w-4xl px-4 py-10 text-foreground">
@@ -38,18 +41,27 @@ export default async function Account() {
             <div className="mt-8 rounded-3xl border bg-card p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between gap-4">
                     <h2 className="text-lg font-medium">Your Rooms</h2>
-                    <CreateRoomButton />
+                    <div className="flex items-center gap-2">
+                        <Link href="/rooms">
+                            <Button variant="outline" size="sm">
+                                Discord Rooms
+                            </Button>
+                        </Link>
+                        <CreateRoomButton />
+                    </div>
                 </div>
 
                 {userRooms.length > 0 ? (
                     <div className="flex flex-col gap-3">
                         {userRooms.map((room) => (
                             <div key={room.id} className="flex flex-col justify-between gap-4 rounded-2xl border bg-background/60 p-4 sm:flex-row sm:items-center">
-                                <div className="flex flex-col flex-1 min-w-0">
+                                <div className="flex min-w-0 flex-1 flex-col">
                                     <span className="font-semibold text-lg truncate">{room.name || "Unnamed Room"}</span>
                                     <span className="max-w-[200px] truncate text-xs text-muted-foreground sm:max-w-xs md:max-w-md lg:max-w-none">ID: {room.slug.substring(0, 16)}...</span>
+                                    {room.discordServerId ? <span className="mt-1 text-xs text-muted-foreground">Discord server: {room.discordServerId}</span> : <span className="mt-1 text-xs text-muted-foreground">Not assigned to a Discord server yet.</span>}
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2">
+                                    {canManageAdminTools ? <RoomDiscordServerButton roomId={room.id} roomName={room.name || "Unnamed Room"} initialDiscordServerId={room.discordServerId ?? ""} /> : null}
                                     <Link href={`/room/${room.slug}`}>
                                         <Button variant="default" size="sm">
                                             Go to Room

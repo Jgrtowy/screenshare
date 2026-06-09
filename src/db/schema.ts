@@ -98,6 +98,7 @@ export const roomsSchema = pgTable("rooms", {
     slug: text("slug").notNull().unique(),
     name: text("name"),
     userId: text("user_id").notNull(),
+    discordServerId: text("discord_server_id"),
 });
 
 export const jellyfinSettingsSchema = pgTable(
