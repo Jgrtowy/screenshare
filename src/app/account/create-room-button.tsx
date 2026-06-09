@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "~/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { createRoomAction } from "./actions";
 
 export function CreateRoomButton() {
@@ -42,18 +37,11 @@ export function CreateRoomButton() {
                     <DialogHeader>
                         <DialogTitle>Create a New Room</DialogTitle>
                     </DialogHeader>
-                    
-                    <form onSubmit={handleSubmit} className="py-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Room Name</label>
-                            <Input
-                                placeholder="My Awesome Stream"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                disabled={loading}
-                                autoFocus
-                                required
-                            />
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="flex flex-col gap-2">
+                            <Label className="text-sm font-medium text-foreground">Room Name</Label>
+                            <Input placeholder="My Awesome Stream" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} autoFocus required />
                         </div>
                     </form>
 

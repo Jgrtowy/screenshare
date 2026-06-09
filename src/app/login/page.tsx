@@ -27,11 +27,11 @@ export default function Auth() {
     };
 
     return (
-        <div className="flex justify-center items-center w-screen h-dvh font-mono bg-zinc-950 text-white">
-            <div className="flex flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-900/80 p-8 shadow-2xl shadow-black/30">
-                <div className="space-y-1">
-                    <h1 className="text-2xl font-bold">Sign in</h1>
-                    <p className="text-sm text-zinc-400">Use Discord to enter room tools.</p>
+        <div className="flex min-h-dvh items-center justify-center bg-background px-6 py-12 text-foreground">
+            <div className="flex w-full max-w-md flex-col gap-4 rounded-3xl border bg-card p-8 shadow-sm">
+                <div className="flex flex-col gap-1">
+                    <h1 className="text-2xl font-semibold">Sign in</h1>
+                    <p className="text-sm text-muted-foreground">Use Discord to enter room tools.</p>
                 </div>
                 <Button onClick={signIn} disabled={isLoading}>
                     {isLoading ? "Connecting..." : "Sign in with Discord"}

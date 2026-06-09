@@ -46,49 +46,49 @@ export function JellyfinSettingsForm({ initialEnabled, initialUrl, initialUserna
     };
 
     return (
-        <form className="space-y-5" onSubmit={handleSubmit}>
-            <label className="flex items-start gap-3 rounded-md border border-zinc-800 bg-zinc-950 p-3 text-sm text-zinc-300">
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+            <label className="flex items-start gap-3 rounded-2xl border bg-background/60 p-4 text-sm text-muted-foreground">
                 <input className="mt-1" type="checkbox" checked={enabled} onChange={(event) => setEnabled(event.target.checked)} disabled={loading} />
-                <span>
-                    <span className="block font-medium text-white">Enable Jellyfin room widget</span>
-                    <span className="text-zinc-500">When enabled, hosted rooms poll your configured Jellyfin server for now-playing media.</span>
+                <span className="flex flex-col gap-1">
+                    <span className="block font-medium text-foreground">Enable Jellyfin room widget</span>
+                    <span className="text-muted-foreground">When enabled, hosted rooms poll your configured Jellyfin server for now-playing media.</span>
                 </span>
             </label>
 
-            <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor={urlId}>
+            <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground" htmlFor={urlId}>
                     Jellyfin URL
                 </label>
                 <div className="flex gap-2">
                     <Input id={urlId} type={showUrl ? "text" : "password"} placeholder="https://jellyfin.example.com" value={url} onChange={(event) => setUrl(event.target.value)} disabled={loading} />
                     <Button type="button" variant="outline" size="icon" onClick={() => setShowUrl((value) => !value)} aria-label={showUrl ? "Hide Jellyfin URL" : "Show Jellyfin URL"} disabled={loading}>
-                        {showUrl ? <EyeOff /> : <Eye />}
+                        {showUrl ? <EyeOff data-icon="inline-start" /> : <Eye data-icon="inline-start" />}
                     </Button>
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor={usernameId}>
+            <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground" htmlFor={usernameId}>
                     Jellyfin username
                 </label>
                 <Input id={usernameId} placeholder="Jellyfin user to display" value={username} onChange={(event) => setUsername(event.target.value)} disabled={loading} autoComplete="off" />
-                <p className="text-xs text-zinc-500">Only now-playing media for this Jellyfin user will appear in hosted rooms.</p>
+                <p className="text-xs text-muted-foreground">Only now-playing media for this Jellyfin user will appear in hosted rooms.</p>
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor={apiKeyId}>
+            <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground" htmlFor={apiKeyId}>
                     API key
                 </label>
                 <div className="flex gap-2">
                     <Input id={apiKeyId} type={showApiKey ? "text" : "password"} placeholder={hasApiKey ? "Saved - leave blank to keep current key" : "Paste Jellyfin API key"} value={apiKey} onChange={(event) => setApiKey(event.target.value)} disabled={loading} autoComplete="off" />
                     <Button type="button" variant="outline" size="icon" onClick={() => setShowApiKey((value) => !value)} aria-label={showApiKey ? "Hide Jellyfin API key" : "Show Jellyfin API key"} disabled={loading}>
-                        {showApiKey ? <EyeOff /> : <Eye />}
+                        {showApiKey ? <EyeOff data-icon="inline-start" /> : <Eye data-icon="inline-start" />}
                     </Button>
                 </div>
             </div>
 
-            {message ? <div className="text-sm text-emerald-400">{message}</div> : null}
-            {error ? <div className="text-sm text-red-400">{error}</div> : null}
+            {message ? <div className="text-sm text-muted-foreground">{message}</div> : null}
+            {error ? <div className="text-sm text-destructive">{error}</div> : null}
 
             <Button type="submit" disabled={loading}>
                 {loading ? "Saving..." : "Save Jellyfin Settings"}

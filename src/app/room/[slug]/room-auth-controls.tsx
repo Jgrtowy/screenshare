@@ -32,9 +32,9 @@ export function RoomAuthControls({ sessionUser }: { sessionUser: RoomSessionUser
     }
 
     return (
-        <div className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-950/80 px-3 py-2">
-            {sessionUser.image ? <div aria-hidden="true" className="h-8 w-8 rounded-full bg-zinc-800 bg-cover bg-center" style={{ backgroundImage: `url(${sessionUser.image})` }} /> : <div className="h-8 w-8 rounded-full bg-zinc-800" />}
-            <span className="text-sm font-medium text-white">{sessionUser.name}</span>
+        <div className="flex items-center gap-3 rounded-2xl border bg-card px-3 py-2 shadow-sm">
+            {sessionUser.image ? <div aria-hidden="true" className="size-8 rounded-full bg-muted bg-cover bg-center" style={{ backgroundImage: `url(${sessionUser.image})` }} /> : <div className="size-8 rounded-full bg-muted" />}
+            <span className="text-sm font-medium text-foreground">{sessionUser.name}</span>
             <Button size="sm" variant="outline" onClick={handleSignOut}>
                 Sign out
             </Button>

@@ -92,10 +92,10 @@ export function StreamPlayer({ slug }: { slug: string }) {
     }, [slug]);
 
     return (
-        <div className="relative w-full h-full bg-black">
-            {error && <div className="absolute inset-0 flex items-center justify-center text-zinc-400 z-10 bg-black/50">{error}</div>}
-            {loading && <div className="absolute inset-0 flex items-center justify-center text-zinc-400 z-10 bg-black/50">Loading...</div>}
-            <video ref={videoRef} autoPlay controls muted playsInline className="w-full h-full object-contain" />
+        <div className="relative aspect-video w-full bg-black">
+            {error && <div className="absolute inset-0 flex items-center justify-center bg-background/80 text-foreground">{error}</div>}
+            {loading && <div className="absolute inset-0 flex items-center justify-center bg-background/80 text-foreground">Loading...</div>}
+            <video ref={videoRef} autoPlay controls muted playsInline className="h-full w-full object-contain" />
         </div>
     );
 }

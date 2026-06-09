@@ -41,27 +41,25 @@ export default async function RoomPage({ params }: RoomPageProps) {
     }
 
     return (
-        <div className="container mx-auto py-10 max-w-5xl text-white font-sans">
-            <div className="flex items-center justify-between mb-6">
-                <div>
-                    <h1 className="text-3xl font-bold">Room: {currentRoom.name || currentRoom.slug.substring(0, 16)}</h1>
-                    <div className="text-zinc-400">
-                        Host: <RoomHostDisplay slug={currentRoom.slug} initialHostName={currentRoom.hostName} className="font-semibold text-white" />
+        <div className="container mx-auto max-w-6xl px-4 py-10 text-foreground">
+            <div className="flex flex-col gap-6">
+                <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-3xl font-semibold">Room: {currentRoom.name || currentRoom.slug.substring(0, 16)}</h1>
+                        <div className="text-sm text-muted-foreground">
+                            Host: <RoomHostDisplay slug={currentRoom.slug} initialHostName={currentRoom.hostName} className="font-semibold text-foreground" />
+                        </div>
                     </div>
+
+                    <RoomAuthControls sessionUser={session?.user ?? null} />
                 </div>
 
-                <RoomAuthControls sessionUser={session?.user ?? null} />
-            </div>
+                <div className="overflow-hidden rounded-3xl border bg-card shadow-sm">
+                    <StreamPlayer slug={currentRoom.slug} />
+                </div>
 
-            <div className="bg-black aspect-video rounded-xl border border-zinc-800 flex items-center justify-center overflow-hidden">
-                <StreamPlayer slug={currentRoom.slug} />
-            </div>
-
-            <div className="mt-6">
                 <CurrentViewersBox roomSlug={currentRoom.slug} sessionUser={session?.user ?? null} />
-            </div>
 
-            <div className="mt-6">
                 <JellyfinWidget roomSlug={currentRoom.slug} />
             </div>
         </div>

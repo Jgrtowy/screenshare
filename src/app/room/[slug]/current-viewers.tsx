@@ -106,25 +106,25 @@ export function CurrentViewersBox({ roomSlug, sessionUser }: { roomSlug: string;
     const viewerCount = viewers.length;
 
     return (
-        <section className="rounded-xl border border-zinc-800 bg-zinc-950/80 p-4 shadow-lg shadow-black/20">
+        <section className="rounded-3xl border bg-card p-4 shadow-sm">
             <div className="flex items-center justify-between gap-3">
-                <div className="rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm text-zinc-300">{viewerCount} watching</div>
+                <div className="rounded-full border bg-muted px-3 py-1 text-sm text-muted-foreground">{viewerCount} watching</div>
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {viewers.map((viewer) => (
-                    <div key={viewer.viewerKey} className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/70 px-3 py-3">
-                        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-zinc-800">
+                    <div key={viewer.viewerKey} className="flex items-center gap-3 rounded-2xl border bg-background/60 px-3 py-3">
+                        <div className="size-10 shrink-0 overflow-hidden rounded-full bg-muted">
                             {viewer.image ? <Image alt={viewer.name} className="h-full w-full object-cover" height={40} src={viewer.image} width={40} /> : <Facehash name={viewer.name} size={40} className="h-full w-full" interactive={false} showInitial={false} variant="solid" />}
                         </div>
 
                         <div className="min-w-0">
-                            <div className="truncate text-sm font-medium text-white">{viewer.name}</div>
+                            <div className="truncate text-sm font-medium text-foreground">{viewer.name}</div>
                         </div>
                     </div>
                 ))}
 
-                {viewers.length === 0 ? <div className="rounded-2xl border border-dashed border-zinc-800 px-3 py-6 text-sm text-zinc-500 sm:col-span-2 lg:col-span-3">No current viewers yet.</div> : null}
+                {viewers.length === 0 ? <div className="rounded-2xl border border-dashed px-3 py-6 text-sm text-muted-foreground sm:col-span-2 lg:col-span-3">No current viewers yet.</div> : null}
             </div>
         </section>
     );
